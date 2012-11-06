@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Note your API Key here for easier changing:
+dungnguyen's at home: "0gwl6Fy0WJvtpJzDybNaOHgZzO4_G96TvqPvn4Q"
+dungnguyen's at class: "0gwl6Fy0WJvu6dgkQFgbGfDECVgQrvFcsaF3LmA"
+-->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
@@ -7,7 +14,7 @@
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0gwl6Fy0WJvu6dgkQFgbGfDECVgQrvFcsaF3LmA"
+        android:apiKey="0gwl6Fy0WJvtpJzDybNaOHgZzO4_G96TvqPvn4Q"
         android:clickable="true"
         android:enabled="true" />
 
@@ -18,5 +25,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone" />
-    
+
 </RelativeLayout>
