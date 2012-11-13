@@ -11,6 +11,7 @@ import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDelegate;
 import vn.edu.hut.htmap.view.RouteOverlay;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -53,9 +54,9 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		final double latitudeFrom = 21.034199;
 		final double longitudeFrom =105.849813;
 
-		this.from = this.geoPoint(latitudeFrom, longitudeFrom);
+		GeoPoint defaultLocation = this.geoPoint(latitudeFrom, longitudeFrom);
 
-		mapController.animateTo(this.from);
+		mapController.animateTo(defaultLocation);
 
 		// Draw pin overlay
 		this.pinOverlay = new 
@@ -65,12 +66,39 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 		this.me = new MyLocationOverlay(this, this.mapView);
 		this.mapView.getOverlays().add(this.me);
+		
+		this.me.runOnFirstFix(new Runnable()
+		{
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mapController.animateTo(me.getMyLocation());
+			}
+			
+		});
 
 		// Get the instruction view and set its
 		// data source & delegate
 		this.instructionView = (RouteInstructionView)this.findViewById(R.id.route_instruction_view);
 		this.instructionView.setDataSource(this);
 		this.instructionView.setDelegate(this);
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		this.me.enableMyLocation();
+	}
+	
+	@Override
+	public void onPause()
+	{
+		this.me.disableMyLocation();
+		
+		super.onPause();
 	}
 
 	private GeoPoint geoPoint(double lat, double lon)
@@ -81,24 +109,34 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	Runnable getPath = new Runnable()
 	{
 		public void run() {
-			route = directions(from, to);
+			final HTMapActivity outer = HTMapActivity.this;
+			outer.from = outer.me.getMyLocation();
+			
+			if (outer.from != null)
+			{
+				outer.route = directions(outer.from, outer.to);
 
-			runOnUiThread(new Runnable() {
-				public void run()
-				{
-
-					// Display route overlay
-					if (mapView.getOverlays().contains(routeOverlay))
+				runOnUiThread(new Runnable() {
+					public void run()
 					{
-						mapView.getOverlays().remove(routeOverlay);
-					}
-					routeOverlay = new RouteOverlay(route, Color.BLUE);			        
-					mapView.getOverlays().add(routeOverlay);
 
-					instructionView.setVisibility(View.VISIBLE);
-					instructionView.setCurrentIndex(0);					
-				}
-			});
+						// Display route overlay
+						if (outer.mapView.getOverlays().contains(routeOverlay))
+						{
+							outer.mapView.getOverlays().remove(routeOverlay);
+						}
+						outer.routeOverlay = new RouteOverlay(route, Color.BLUE);			        
+						outer.mapView.getOverlays().add(routeOverlay);
+
+						outer.instructionView.setVisibility(View.VISIBLE);
+						outer.instructionView.setCurrentIndex(0);					
+					}
+				});
+			} 
+			else
+			{
+				Log.e("Location error", "Cannot find user location");
+			}
 		}
 	};
 
