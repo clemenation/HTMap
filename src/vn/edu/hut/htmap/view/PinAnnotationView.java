@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
 
 public class PinAnnotationView extends LinearLayout implements OnClickListener {
 
@@ -45,8 +46,16 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 	{
 		this.point = point;
 		
+		// move the annotationView to the newly set point 
+		((MapView.LayoutParams)this.getLayoutParams()).point = this.point; 
+		
 		// TODO get detail of point and display in
 		// its detailText
+	}
+	
+	public GeoPoint getPoint()
+	{
+		return this.point;
 	}
 	
 	public void onClick(View v) {

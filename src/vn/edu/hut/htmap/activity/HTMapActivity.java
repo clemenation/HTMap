@@ -5,6 +5,9 @@ import vn.edu.hut.htmap.model.GoogleParser;
 import vn.edu.hut.htmap.model.Parser;
 import vn.edu.hut.htmap.model.Route;
 import vn.edu.hut.htmap.model.Segment;
+import vn.edu.hut.htmap.view.PinAnnotationView;
+import vn.edu.hut.htmap.view.PinAnnotationView.PinAnnotationViewDelegate;
+import vn.edu.hut.htmap.view.PinOverlayManager;
 import vn.edu.hut.htmap.view.RouteInstructionView;
 import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDataSource;
 import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDelegate;
@@ -23,16 +26,18 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 
-public class HTMapActivity extends MapActivity implements RouteInstructionViewDataSource, RouteInstructionViewDelegate {
+import de.android1.overlaymanager.OverlayManager;
+
+public class HTMapActivity extends MapActivity implements RouteInstructionViewDataSource, RouteInstructionViewDelegate, PinAnnotationViewDelegate {
 	MapView mapView;
-	private PinOverlay pinOverlay;
+	private PinOverlayManager pinOverlayManager;
 	private GeoPoint from;
 	GeoPoint to;
 	private RouteOverlay routeOverlay;
 	private MyLocationOverlay me = null;
 	private Route route = null;
 	private RouteInstructionView instructionView = null;
-
+	private OverlayManager overlayManager = null;
 
 	@Override
 	protected boolean isRouteDisplayed() { return false; }
@@ -57,12 +62,13 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		GeoPoint defaultLocation = this.geoPoint(latitudeFrom, longitudeFrom);
 
 		mapController.animateTo(defaultLocation);
+		
+		// Create overlayManager
+		this.overlayManager = new OverlayManager(this, this.mapView);
 
 		// Draw pin overlay
-		this.pinOverlay = new 
-				PinOverlay(this, this.getResources().getDrawable(R.drawable.pin_s),
-						this);
-		this.mapView.getOverlays().add(this.pinOverlay);
+		this.pinOverlayManager = new PinOverlayManager(this.overlayManager, this.getResources().getDrawable(R.drawable.pin_s));
+		this.pinOverlayManager.setDelegate(this);
 
 		this.me = new MyLocationOverlay(this, this.mapView);
 		this.mapView.getOverlays().add(this.me);
@@ -72,7 +78,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				mapController.animateTo(me.getMyLocation());
 			}
 			
@@ -183,5 +188,20 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 	public int numberOfSegment() {
 		return (this.route.getSegments().size());
+	}
+	
+
+	// PinAnnotationView delegate methods	
+	@Override
+	public void onDirectionButtonClick(PinAnnotationView view) {
+		this.to = view.getPoint();
+
+		new Thread(this.getPath).start();
+	}
+
+	@Override
+	public void onDetailButtonClick(PinAnnotationView view) {
+		// TODO Auto-generated method stub
+		
 	}
 }
