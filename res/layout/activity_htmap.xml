@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-Note your API Key here for easier changing:
-dungnguyen's at home: "0gwl6Fy0WJvtpJzDybNaOHgZzO4_G96TvqPvn4Q"
-dungnguyen's at class: "0gwl6Fy0WJvu6dgkQFgbGfDECVgQrvFcsaF3LmA"
+Copy the debug.keystore from support/keystore/
+to ~/.android for the apiKey to work
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
