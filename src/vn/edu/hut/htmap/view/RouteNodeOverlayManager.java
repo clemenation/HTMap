@@ -7,7 +7,6 @@ import vn.edu.hut.htmap.R;
 import vn.edu.hut.htmap.model.Route;
 import vn.edu.hut.htmap.model.Segment;
 import android.content.Context;
-import android.util.Log;
 import de.android1.overlaymanager.ManagedOverlay;
 import de.android1.overlaymanager.ManagedOverlayItem;
 import de.android1.overlaymanager.OverlayManager;
@@ -45,11 +44,18 @@ public class RouteNodeOverlayManager {
 		
 		this.manager.populate();		
 		
+		// Draw points
 		List<ManagedOverlayItem> routeNodeItem = new ArrayList<ManagedOverlayItem>();
 		
-		for (Segment segment : this.route.getSegments())
+		// Draw the from and to points
+		routeNodeItem.add(new ManagedOverlayItem(this.route.getFromPoint(), null, null));
+		routeNodeItem.add(new ManagedOverlayItem(this.route.getToPoint(), null, null));
+		
+		// Draw the in between points
+		List<Segment> segments = this.route.getSegments();		
+		for (int i=1; i<segments.size(); i++)
 		{
-			routeNodeItem.add(new ManagedOverlayItem(segment.startPoint(), null, null));
+			routeNodeItem.add(new ManagedOverlayItem(segments.get(i).startPoint(), null, null));
 		}
 		
 		this.routeNodeOverlay.addAll(routeNodeItem);

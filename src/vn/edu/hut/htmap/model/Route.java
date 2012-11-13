@@ -14,6 +14,8 @@ public class Route {
     private String country;
     private int length;
     private String polyline;
+    private GeoPoint fromPoint;
+    private GeoPoint toPoint;
 
     public Route() {
             points = new ArrayList<GeoPoint>();
@@ -23,9 +25,26 @@ public class Route {
     public void addPoint(final GeoPoint p) {
             points.add(p);
     }
+    
+    public GeoPoint getFromPoint()
+    {
+    	return this.fromPoint;
+    }
+    
+    public GeoPoint getToPoint()
+    {
+    	return this.toPoint;
+    }
 
     public void addPoints(final List<GeoPoint> points) {
             this.points.addAll(points);
+            
+            // Update the to & from point
+            if (this.points.size() > 0)
+            {
+            	this.fromPoint = this.points.get(0);
+            	this.toPoint = this.points.get(this.points.size()-1);
+            }
     }
 
     public List<GeoPoint> getPoints() {
