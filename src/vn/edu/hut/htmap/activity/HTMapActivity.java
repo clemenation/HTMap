@@ -11,6 +11,7 @@ import vn.edu.hut.htmap.view.PinOverlayManager;
 import vn.edu.hut.htmap.view.RouteInstructionView;
 import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDataSource;
 import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDelegate;
+import vn.edu.hut.htmap.view.RouteNodeOverlayManager;
 import vn.edu.hut.htmap.view.RouteOverlay;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,15 +30,16 @@ import com.google.android.maps.MyLocationOverlay;
 import de.android1.overlaymanager.OverlayManager;
 
 public class HTMapActivity extends MapActivity implements RouteInstructionViewDataSource, RouteInstructionViewDelegate, PinAnnotationViewDelegate {
-	MapView mapView;
+	private MapView mapView;
 	private PinOverlayManager pinOverlayManager;
 	private GeoPoint from;
-	GeoPoint to;
+	private GeoPoint to;
 	private RouteOverlay routeOverlay;
 	private MyLocationOverlay me = null;
 	private Route route = null;
 	private RouteInstructionView instructionView = null;
 	private OverlayManager overlayManager = null;
+	private RouteNodeOverlayManager routeNodeOverlayManager = null;
 
 	@Override
 	protected boolean isRouteDisplayed() { return false; }
@@ -57,7 +59,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		((FrameLayout.LayoutParams)zoomControls.getLayoutParams()).gravity = Gravity.RIGHT;
 		//Example data
 		final double latitudeFrom = 21.034199;
-		final double longitudeFrom =105.849813;
+		final double longitudeFrom = 105.849813;
 
 		GeoPoint defaultLocation = this.geoPoint(latitudeFrom, longitudeFrom);
 
@@ -69,10 +71,13 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		// Draw pin overlay
 		this.pinOverlayManager = new PinOverlayManager(this.overlayManager, this.getResources().getDrawable(R.drawable.pin_s));
 		this.pinOverlayManager.setDelegate(this);
+		
+		// Create route node overlay
+		this.routeNodeOverlayManager = new RouteNodeOverlayManager(this.overlayManager);
 
+		// My location overlay
 		this.me = new MyLocationOverlay(this, this.mapView);
 		this.mapView.getOverlays().add(this.me);
-		
 		this.me.runOnFirstFix(new Runnable()
 		{
 
@@ -126,15 +131,19 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 					{
 
 						// Display route overlay
-						if (outer.mapView.getOverlays().contains(routeOverlay))
+						if (outer.mapView.getOverlays().contains(outer.routeOverlay))
 						{
-							outer.mapView.getOverlays().remove(routeOverlay);
+							outer.mapView.getOverlays().remove(outer.routeOverlay);
 						}
-						outer.routeOverlay = new RouteOverlay(route, Color.BLUE);			        
-						outer.mapView.getOverlays().add(routeOverlay);
+						outer.routeOverlay = new RouteOverlay(outer.route, Color.BLUE);			        
+						outer.mapView.getOverlays().add(outer.routeOverlay);
+						
+						// Display route node overlay
+						outer.routeNodeOverlayManager.setRoute(outer.route);
 
+						// Display the instruction view
 						outer.instructionView.setVisibility(View.VISIBLE);
-						outer.instructionView.setCurrentIndex(0);					
+						outer.instructionView.setCurrentIndex(0);
 					}
 				});
 			} 
@@ -197,6 +206,8 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		this.to = view.getPoint();
 
 		new Thread(this.getPath).start();
+		
+		this.pinOverlayManager.removePin();
 	}
 
 	@Override

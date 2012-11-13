@@ -71,6 +71,16 @@ public class PinOverlayManager
 
 		this.mapView.getController().animateTo(this.pin.getPoint());
 	}
+	
+	public void removePin()
+	{
+		if (this.pin != null)
+		{
+			this.pinOverlay.remove(this.pin);
+			this.annotationView.setVisibility(View.GONE);
+			this.mapView.invalidate();
+		}
+	}
 
 	public ManagedOverlayItem getPin()
 	{
