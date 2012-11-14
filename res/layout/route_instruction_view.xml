@@ -47,13 +47,15 @@
         <TextView
             android:id="@+id/route_instruction_view_instruction_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="#ffffffff" />
 
         <TextView
             android:id="@+id/route_instruction_view_length_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:textColor="#ffffffff" />
     </LinearLayout>
 
 </RelativeLayout>
