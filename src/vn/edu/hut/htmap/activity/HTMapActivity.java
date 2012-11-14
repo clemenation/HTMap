@@ -13,6 +13,7 @@ import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDataSource
 import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDelegate;
 import vn.edu.hut.htmap.view.RouteNodeOverlayManager;
 import vn.edu.hut.htmap.view.RouteOverlay;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	private OverlayManager overlayManager = null;
 	private RouteNodeOverlayManager routeNodeOverlayManager = null;
 	private boolean directionMode = false;
+	private ProgressDialog progressDialog = null; 
 
 	@Override
 	protected boolean isRouteDisplayed() { return false; }
@@ -156,11 +158,20 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 			if (outer.from != null)
 			{
+				runOnUiThread(new Runnable()
+				{
+					@Override
+					public void run() {
+						outer.progressDialog = ProgressDialog.show(outer, "Direction", "Loading your direction", true, false);
+					}
+				});
+				
 				outer.route = directions(outer.from, outer.to);
 
 				runOnUiThread(new Runnable() {
 					public void run()
 					{
+						outer.progressDialog.dismiss();
 						outer.setDirectionMode(true);
 					}
 				});
