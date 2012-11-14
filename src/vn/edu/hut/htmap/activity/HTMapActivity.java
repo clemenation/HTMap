@@ -13,6 +13,7 @@ import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDataSource
 import vn.edu.hut.htmap.view.RouteInstructionView.RouteInstructionViewDelegate;
 import vn.edu.hut.htmap.view.RouteNodeOverlayManager;
 import vn.edu.hut.htmap.view.RouteOverlay;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -165,7 +166,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 						outer.progressDialog = ProgressDialog.show(outer, "Direction", "Loading your direction", true, false);
 					}
 				});
-				
+
 				outer.route = directions(outer.from, outer.to);
 
 				runOnUiThread(new Runnable() {
@@ -178,6 +179,20 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			} 
 			else
 			{
+				runOnUiThread(new Runnable()
+				{
+					public void run()
+					{
+						// Display alert dialog indicates user location not found
+						AlertDialog.Builder builder = new AlertDialog.Builder(outer);
+						builder.setMessage("Cannot find user location")
+						.setTitle("Error")
+						.setNeutralButton("Back", null);
+						AlertDialog dialog = builder.create();	
+						dialog.show();
+					}
+				});
+
 				Log.e("Location error", "Cannot find user location");
 			}
 		}
