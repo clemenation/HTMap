@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.Html;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
@@ -74,7 +75,9 @@ public class GoogleParser extends XMLParser implements Parser {
 				segment.setLength(length);
 				segment.setDistance(distance/1000);
 				//Strip html from google directions and set as turn instruction
-				segment.setInstruction(step.getString("html_instructions").replaceAll("<(.*?)*>", ""));
+				Log.i("GoogleParser", step.getString("html_instructions"));
+				String instruction = Html.fromHtml(step.getString("html_instructions")).toString().replaceAll("\n\n", "\n").trim();
+				segment.setInstruction(instruction);
 				//Retrieve & decode this segment's polyline and add it to the route.
 				route.addPoints(decodePolyLine(step.getJSONObject("polyline").getString("points")));
 				//Push a copy of the segment to the route
