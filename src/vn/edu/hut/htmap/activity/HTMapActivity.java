@@ -19,6 +19,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -58,10 +60,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		final MapController mapController = this.mapView.getController();
 		mapController.setZoom(17);
 
-		// Turn on built in zoom control & make it appear at right side of screen
-		this.mapView.setBuiltInZoomControls(true);
-		ZoomControls zoomControls = (ZoomControls)this.mapView.getZoomButtonsController().getZoomControls();
-		((FrameLayout.LayoutParams)zoomControls.getLayoutParams()).gravity = Gravity.RIGHT;
 		//Example data
 		final double latitudeFrom = 21.034199;
 		final double longitudeFrom = 105.849813;
@@ -98,6 +96,9 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		this.instructionView = (RouteInstructionView)this.findViewById(R.id.route_instruction_view);
 		this.instructionView.setDataSource(this);
 		this.instructionView.setDelegate(this);
+
+		// Disable action bar title
+		this.getActionBar().setDisplayShowTitleEnabled(false);
 	}
 
 	@Override
@@ -117,11 +118,42 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater = this.getMenuInflater();
+		inflater.inflate(R.menu.htmap_options, menu);
+
+		if (this.directionMode)
+		{
+			menu.add("List").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			this.setDirectionMode(false);
+			return true;
+		case R.id.menu_zoom_in:
+			this.mapView.getController().zoomIn();
+			return true;
+		case R.id.menu_zoom_out:
+			this.mapView.getController().zoomOut();
+			return true;
+		case R.id.menu_locate_user:
+			try
+			{
+				this.mapView.getController().animateTo(this.me.getMyLocation());
+				this.mapView.getController().setZoom(17);
+			}
+			catch (NullPointerException e)
+			{
+				this.userLocationNotFoundAlert();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -183,13 +215,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 				{
 					public void run()
 					{
-						// Display alert dialog indicates user location not found
-						AlertDialog.Builder builder = new AlertDialog.Builder(outer);
-						builder.setMessage("Cannot find user location")
-						.setTitle("Error")
-						.setNeutralButton("Back", null);
-						AlertDialog dialog = builder.create();	
-						dialog.show();
+						outer.userLocationNotFoundAlert();
 					}
 				});
 
@@ -197,6 +223,17 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			}
 		}
 	};	
+
+	public void userLocationNotFoundAlert()
+	{
+		// Display alert dialog indicates user location not found
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Cannot find user location")
+		.setTitle("Error")
+		.setNeutralButton("Back", null);
+		AlertDialog dialog = builder.create();	
+		dialog.show();
+	}
 
 	public void setDirectionMode(boolean directionMode)
 	{
@@ -230,6 +267,8 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 			// Enable up button
 			this.getActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 		}
 		else
 		{
@@ -242,6 +281,8 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			// Disable up button
 			this.getActionBar().setDisplayHomeAsUpEnabled(false);
 		}
+
+		this.invalidateOptionsMenu();
 	}
 
 	/**

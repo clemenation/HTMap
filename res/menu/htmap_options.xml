@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_zoom_in" android:title="+" android:showAsAction="always"></item>
+    <item android:id="@+id/menu_zoom_out" android:title="-" android:showAsAction="always"></item>
+    <item android:id="@+id/menu_locate_user" android:title="O" android:showAsAction="always"></item>
+    
+
+</menu>

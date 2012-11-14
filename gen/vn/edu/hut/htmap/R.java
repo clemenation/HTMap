@@ -19,7 +19,10 @@ public final class R {
     }
     public static final class id {
         public static final int mapview=0x7f070000;
+        public static final int menu_locate_user=0x7f07000d;
         public static final int menu_settings=0x7f07000a;
+        public static final int menu_zoom_in=0x7f07000b;
+        public static final int menu_zoom_out=0x7f07000c;
         public static final int pin_annotation_view_detail_layout=0x7f070003;
         public static final int pin_annotation_view_detail_text=0x7f070004;
         public static final int pin_annotation_view_direction_button=0x7f070002;
@@ -37,6 +40,7 @@ public final class R {
     }
     public static final class menu {
         public static final int activity_htmap=0x7f060000;
+        public static final int htmap_options=0x7f060001;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
