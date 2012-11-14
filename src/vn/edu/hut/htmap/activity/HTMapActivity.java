@@ -316,6 +316,8 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	public void onChangedIndex(int index) {
 		this.mapView.getController().animateTo(this.route.getSegments().get(index).startPoint());
 		this.mapView.getController().setZoom(17);
+		
+		this.routeNodeOverlayManager.setSelectedNode(index);
 	}
 
 	// Instruction view data source methods
