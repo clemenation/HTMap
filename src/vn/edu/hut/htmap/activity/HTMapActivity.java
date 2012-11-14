@@ -124,6 +124,18 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		if (this.directionMode == true)
+		{
+			this.setDirectionMode(false);
+			return;
+		}
+		
+		super.onBackPressed();
+	}
 
 	private GeoPoint geoPoint(double lat, double lon)
 	{
