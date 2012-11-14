@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ZoomControls;
@@ -40,6 +41,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	private RouteInstructionView instructionView = null;
 	private OverlayManager overlayManager = null;
 	private RouteNodeOverlayManager routeNodeOverlayManager = null;
+	private boolean directionMode = false;
 
 	@Override
 	protected boolean isRouteDisplayed() { return false; }
@@ -64,14 +66,14 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		GeoPoint defaultLocation = this.geoPoint(latitudeFrom, longitudeFrom);
 
 		mapController.animateTo(defaultLocation);
-		
+
 		// Create overlayManager
 		this.overlayManager = new OverlayManager(this, this.mapView);
 
 		// Draw pin overlay
 		this.pinOverlayManager = new PinOverlayManager(this.overlayManager, this.getResources().getDrawable(R.drawable.pin_s));
 		this.pinOverlayManager.setDelegate(this);
-		
+
 		// Create route node overlay
 		this.routeNodeOverlayManager = new RouteNodeOverlayManager(this.overlayManager);
 
@@ -85,7 +87,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			public void run() {
 				mapController.animateTo(me.getMyLocation());
 			}
-			
+
 		});
 
 		// Get the instruction view and set its
@@ -94,21 +96,33 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		this.instructionView.setDataSource(this);
 		this.instructionView.setDelegate(this);
 	}
-	
+
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		
+
 		this.me.enableMyLocation();
 	}
-	
+
 	@Override
 	public void onPause()
 	{
 		this.me.disableMyLocation();
-		
+
 		super.onPause();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.setDirectionMode(false);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private GeoPoint geoPoint(double lat, double lon)
@@ -121,7 +135,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		public void run() {
 			final HTMapActivity outer = HTMapActivity.this;
 			outer.from = outer.me.getMyLocation();
-			
+
 			if (outer.from != null)
 			{
 				outer.route = directions(outer.from, outer.to);
@@ -129,21 +143,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 				runOnUiThread(new Runnable() {
 					public void run()
 					{
-
-						// Display route overlay
-						if (outer.mapView.getOverlays().contains(outer.routeOverlay))
-						{
-							outer.mapView.getOverlays().remove(outer.routeOverlay);
-						}
-						outer.routeOverlay = new RouteOverlay(outer.route, Color.BLUE);			        
-						outer.mapView.getOverlays().add(outer.routeOverlay);
-						
-						// Display route node overlay
-						outer.routeNodeOverlayManager.setRoute(outer.route);
-
-						// Display the instruction view
-						outer.instructionView.setVisibility(View.VISIBLE);
-						outer.instructionView.setCurrentIndex(0);
+						outer.setDirectionMode(true);
 					}
 				});
 			} 
@@ -152,7 +152,49 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 				Log.e("Location error", "Cannot find user location");
 			}
 		}
-	};
+	};	
+
+	public void setDirectionMode(boolean directionMode)
+	{
+		if (this.directionMode != directionMode)
+		{
+			this.directionMode = directionMode;
+
+			// Remove route overlay
+			if (this.mapView.getOverlays().contains(this.routeOverlay))
+			{
+				this.mapView.getOverlays().remove(this.routeOverlay);
+			}
+
+			if (this.directionMode == true)
+			{
+				// Display route overlay
+				this.routeOverlay = new RouteOverlay(this.route, Color.BLUE);			        
+				this.mapView.getOverlays().add(this.routeOverlay);
+
+				// Display route node overlay
+				this.routeNodeOverlayManager.setRoute(this.route);
+
+				// Display the instruction view
+				this.instructionView.setVisibility(View.VISIBLE);
+				this.instructionView.setCurrentIndex(0);
+
+				// Enable up button
+				this.getActionBar().setDisplayHomeAsUpEnabled(true);
+			}
+			else
+			{
+				// Remove route node overlay
+				this.routeNodeOverlayManager.setRoute(null);
+
+				// Hide the instruction view
+				this.instructionView.setVisibility(View.GONE);
+
+				// Disable up button
+				this.getActionBar().setDisplayHomeAsUpEnabled(false);
+			}
+		}
+	}
 
 	/**
 	 * Calls Google Maps API to get the route 
@@ -198,7 +240,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	public int numberOfSegment() {
 		return (this.route.getSegments().size());
 	}
-	
+
 
 	// PinAnnotationView delegate methods	
 	@Override
@@ -206,13 +248,13 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		this.to = view.getPoint();
 
 		new Thread(this.getPath).start();
-		
+
 		this.pinOverlayManager.removePin();
 	}
 
 	@Override
 	public void onDetailButtonClick(PinAnnotationView view) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
