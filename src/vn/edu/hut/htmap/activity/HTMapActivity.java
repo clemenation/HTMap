@@ -15,6 +15,7 @@ import vn.edu.hut.htmap.view.RouteNodeOverlayManager;
 import vn.edu.hut.htmap.view.RouteOverlay;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -190,17 +191,39 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 				runOnUiThread(new Runnable()
 				{
 					public void run() {
-						outer.progressDialog = ProgressDialog.show(outer, "Direction", "Loading your direction", true, false);
+						outer.progressDialog = ProgressDialog.show(outer, 
+								"Direction", "Loading your direction", true, true);
+						outer.progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+						{
+
+							public void onCancel(DialogInterface dialog) {
+								// TODO Auto-generated method stub
+								outer.to = null;
+							}
+							
+						});
 					}
 				});
 
-				outer.route = directions(outer.from, outer.to);
+				final GeoPoint from = outer.from;
+				final GeoPoint to = outer.to;				
+				final Route route = directions(from, to);
 
 				runOnUiThread(new Runnable() {
 					public void run()
 					{
 						outer.progressDialog.dismiss();
-						outer.setDirectionMode(true);
+						
+						if ((from == outer.from) && (to == outer.to))
+						{
+							// if the from & to has not changed after getting direction							
+							outer.route = route;
+							outer.setDirectionMode(true);
+						}
+						else
+						{
+							Log.e("HTMapActivity", "From & to changed");
+						}
 					}
 				});
 			} 
