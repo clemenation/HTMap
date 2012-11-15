@@ -90,7 +90,6 @@ public class PinOverlayManager
 	private OnOverlayGestureListener gestureListener = new OnOverlayGestureListener()
 	{
 
-		@Override
 		public boolean onSingleTap(MotionEvent arg0, ManagedOverlay arg1,
 				GeoPoint arg2, ManagedOverlayItem arg3) {
 			
@@ -122,29 +121,24 @@ public class PinOverlayManager
 			}
 		}
 
-		@Override
 		public void onLongPress(MotionEvent arg0, ManagedOverlay arg1) {
 			GeoPoint pinPoint = PinOverlayManager.this.mapView.getProjection().fromPixels((int)arg0.getX(), (int)arg0.getY());
 			PinOverlayManager.this.setPinPoint(pinPoint);
 		}
 
-		@Override
 		public void onLongPressFinished(MotionEvent arg0, ManagedOverlay arg1,
 				GeoPoint arg2, ManagedOverlayItem arg3) {
 		}
 
-		@Override
 		public boolean onScrolled(MotionEvent arg0, MotionEvent arg1,
 				float arg2, float arg3, ManagedOverlay arg4) {			
 			return false;
 		}
 
-		@Override
 		public boolean onZoom(ZoomEvent arg0, ManagedOverlay arg1) {
 			return false;
 		}
 
-		@Override
 		public boolean onDoubleTap(MotionEvent arg0, ManagedOverlay arg1,
 				GeoPoint arg2, ManagedOverlayItem arg3) {
 			return false;

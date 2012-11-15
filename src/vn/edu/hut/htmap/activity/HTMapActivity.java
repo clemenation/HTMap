@@ -18,13 +18,10 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ZoomControls;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -84,7 +81,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		this.me.runOnFirstFix(new Runnable()
 		{
 
-			@Override
 			public void run() {
 				mapController.animateTo(me.getMyLocation());
 			}
@@ -193,7 +189,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			{
 				runOnUiThread(new Runnable()
 				{
-					@Override
 					public void run() {
 						outer.progressDialog = ProgressDialog.show(outer, "Direction", "Loading your direction", true, false);
 					}
@@ -335,7 +330,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 
 	// PinAnnotationView delegate methods	
-	@Override
 	public void onDirectionButtonClick(PinAnnotationView view) {
 		this.to = view.getPoint();
 
@@ -344,7 +338,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		this.pinOverlayManager.removePin();
 	}
 
-	@Override
 	public void onDetailButtonClick(PinAnnotationView view) {
 		// TODO Auto-generated method stub
 
