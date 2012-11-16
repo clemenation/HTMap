@@ -66,7 +66,7 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 	public void getDetail()
 	{
 		// Empty the detail text as its getting new address
-		this.detailText.setText("");
+		this.detailText.setVisibility(View.GONE);
 		new GetAddress().execute(null, null);
 	}
 
@@ -90,6 +90,7 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 			if (outer.point == parser.getRequestLocation())
 			{
 				outer.detailText.setText(address.getFormattedAddress());
+				outer.detailText.setVisibility(View.VISIBLE);
 			}
 			else
 			{

@@ -7,9 +7,10 @@
     
     <Button
         android:id="@+id/pin_annotation_view_direction_button"
-        android:text="D"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="D" />
     
     <LinearLayout
         android:id="@+id/pin_annotation_view_detail_layout"
@@ -21,11 +22,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Dropped Pin" />
+
         <TextView
             android:id="@+id/pin_annotation_view_detail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hanoi, HN 10000, Vietnam" />
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </LinearLayout>

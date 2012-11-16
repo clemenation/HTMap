@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.android.maps.GeoPoint;
 
 public class Route {
-    private String name;
+	private String name;
     private final List<GeoPoint> points;
     private List<Segment> segments;
     private String copyright;

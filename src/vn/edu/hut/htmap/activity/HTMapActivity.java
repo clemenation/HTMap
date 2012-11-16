@@ -1,8 +1,8 @@
 package vn.edu.hut.htmap.activity;
 
 import vn.edu.hut.htmap.R;
-import vn.edu.hut.htmap.model.GoogleDirectionParser;
 import vn.edu.hut.htmap.model.DirectionParser;
+import vn.edu.hut.htmap.model.GoogleDirectionParser;
 import vn.edu.hut.htmap.model.Route;
 import vn.edu.hut.htmap.model.Segment;
 import vn.edu.hut.htmap.view.PinAnnotationView;
@@ -44,7 +44,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	private OverlayManager overlayManager = null;
 	private RouteNodeOverlayManager routeNodeOverlayManager = null;
 	private boolean directionMode = false;
-	private ProgressDialog progressDialog = null; 
+	private ProgressDialog progressDialog = null;
 
 	@Override
 	protected boolean isRouteDisplayed() { return false; }
@@ -120,17 +120,12 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 		MenuInflater inflater = this.getMenuInflater();
 		inflater.inflate(R.menu.htmap_options, menu);
 
-		if (this.directionMode)
-		{
-			menu.add("List").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
-	{
+	{		
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			this.setDirectionMode(false);
@@ -151,7 +146,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			{
 				this.userLocationNotFoundAlert();
 			}
-			return true;
+			return true;		
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -200,7 +195,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 								// TODO Auto-generated method stub
 								outer.to = null;
 							}
-							
+
 						});
 					}
 				});
@@ -213,7 +208,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 					public void run()
 					{
 						outer.progressDialog.dismiss();
-						
+
 						if ((from == outer.from) && (to == outer.to))
 						{
 							// if the from & to has not changed after getting direction							
@@ -299,8 +294,6 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			// Disable up button
 			this.getActionBar().setDisplayHomeAsUpEnabled(false);
 		}
-
-		this.invalidateOptionsMenu();
 	}
 
 	/**
@@ -320,7 +313,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	public void onChangedIndex(int index) {
 		this.mapView.getController().animateTo(this.route.getSegments().get(index).getStartPoint());
 		this.mapView.getController().setZoom(17);
-		
+
 		this.routeNodeOverlayManager.setSelectedNode(index);
 	}
 

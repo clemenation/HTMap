@@ -107,5 +107,10 @@ public class Segment {
 	public double getDistance() {
 		return distance;
 	}
+	
+	public String toString()
+	{
+		return this.instruction;
+	}
 
 }
