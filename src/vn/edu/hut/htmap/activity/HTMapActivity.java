@@ -16,6 +16,7 @@ import vn.edu.hut.htmap.view.RouteOverlay;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,8 @@ import com.google.android.maps.MyLocationOverlay;
 import de.android1.overlaymanager.OverlayManager;
 
 public class HTMapActivity extends MapActivity implements RouteInstructionViewDataSource, RouteInstructionViewDelegate, PinAnnotationViewDelegate {
+	public final static String LOCATION_COORDINATE_EXTRA = "vn.edu.hut.htmap.LocationCoordinate";
+	
 	private MapView mapView;
 	private PinOverlayManager pinOverlayManager;
 	private GeoPoint from;
@@ -341,7 +344,14 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	}
 
 	public void onDetailButtonClick(PinAnnotationView view) {
-		// TODO Auto-generated method stub
-
+		this.showLocationDetail(view.getPoint());
+	}
+	
+	public void showLocationDetail(GeoPoint location)
+	{
+		Intent locationDetailIntent = new Intent(this, HTLocationDetailActivity.class);
+		int[] locationCoordinate = {location.getLatitudeE6(), location.getLongitudeE6()};
+		locationDetailIntent.putExtra(HTMapActivity.LOCATION_COORDINATE_EXTRA, locationCoordinate);
+		this.startActivity(locationDetailIntent);
 	}
 }

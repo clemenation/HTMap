@@ -2,33 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="#000000" >
-    
+    android:background="#55000000"
+    android:orientation="horizontal" >
+
     <Button
         android:id="@+id/pin_annotation_view_direction_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:background="#99000000"
+        android:textColor="#ffffff"
         android:text="D" />
-    
+
     <LinearLayout
         android:id="@+id/pin_annotation_view_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical" >
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dropped Pin" />
+            android:text="Dropped Pin"
+            android:textColor="#ffffff" />
 
         <TextView
             android:id="@+id/pin_annotation_view_detail_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#ffffff"
             android:visibility="gone" />
-
     </LinearLayout>
 
 </LinearLayout>

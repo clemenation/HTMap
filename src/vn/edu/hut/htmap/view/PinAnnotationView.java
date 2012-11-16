@@ -53,7 +53,7 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 		// move the annotationView to the newly set point 
 		((MapView.LayoutParams)this.getLayoutParams()).point = this.point; 
 
-		// TODO get detail of point and display in
+		// get detail of point and display in
 		// its detailText
 		this.getDetail();
 	}
