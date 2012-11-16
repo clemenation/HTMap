@@ -16,11 +16,11 @@ import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
-public class GoogleParser extends XMLParser implements Parser {
+public class GoogleDirectionParser extends XMLParser implements DirectionParser {
 	/** Distance covered. **/
 	private int distance;
 
-	public GoogleParser(String feedUrl) {
+	public GoogleDirectionParser(String feedUrl) {
 		super(feedUrl);
 	}
 
@@ -50,7 +50,6 @@ public class GoogleParser extends XMLParser implements Parser {
 			JSONObject boundsSW = bounds.getJSONObject("southwest");
 			route.setBoundsSW(new GeoPoint((int)(boundsSW.getDouble("lat")*1E6),
 					(int)(boundsSW.getDouble("lng")*1E6)));
-			Log.i("GoogleParser", "NE=" + route.getBoundsNE().toString() + ",SW=" + route.getBoundsSW().toString());
 			
 			//Get the leg, only one leg as we don't support waypoints
 			final JSONObject leg = jsonRoute.getJSONArray("legs").getJSONObject(0);

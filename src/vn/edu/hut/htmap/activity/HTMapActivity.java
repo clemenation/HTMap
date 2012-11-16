@@ -1,8 +1,8 @@
 package vn.edu.hut.htmap.activity;
 
 import vn.edu.hut.htmap.R;
-import vn.edu.hut.htmap.model.GoogleParser;
-import vn.edu.hut.htmap.model.Parser;
+import vn.edu.hut.htmap.model.GoogleDirectionParser;
+import vn.edu.hut.htmap.model.DirectionParser;
 import vn.edu.hut.htmap.model.Route;
 import vn.edu.hut.htmap.model.Segment;
 import vn.edu.hut.htmap.view.PinAnnotationView;
@@ -310,7 +310,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	 * @return A route from start to destination
 	 */
 	private Route directions(final GeoPoint start, final GeoPoint dest) {
-		Parser parser;
+		DirectionParser parser;
 		String jsonURL = "http://maps.google.com/maps/api/directions/json?";
 		final StringBuffer sBuf = new StringBuffer(jsonURL);
 		sBuf.append("origin=");
@@ -325,7 +325,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 		System.out.println("Route URL: " + sBuf.toString());
 
-		parser = new GoogleParser(sBuf.toString());
+		parser = new GoogleDirectionParser(sBuf.toString());
 		Route r =  parser.parse();
 		return r;
 	}

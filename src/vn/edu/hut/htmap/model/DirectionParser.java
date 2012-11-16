@@ -1,5 +1,5 @@
 package vn.edu.hut.htmap.model;
 
-public interface Parser {
+public interface DirectionParser {
 	public Route parse();
 }
