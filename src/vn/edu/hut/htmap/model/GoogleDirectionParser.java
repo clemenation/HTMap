@@ -19,9 +19,37 @@ import com.google.android.maps.GeoPoint;
 public class GoogleDirectionParser extends XMLParser implements DirectionParser {
 	/** Distance covered. **/
 	private int distance;
+	
+	public GoogleDirectionParser(GeoPoint from, GeoPoint to)
+	{
+		this(GoogleDirectionParser.feedUrlFromPoints(from, to));
+	}
 
 	public GoogleDirectionParser(String feedUrl) {
 		super(feedUrl);
+	}
+	
+	/**
+	 * Use the defined points to create the direction URL
+	 * @param from
+	 * @param to
+	 * @return a URL that uses Google Direction API
+	 */
+	public static String feedUrlFromPoints(GeoPoint from, GeoPoint to)
+	{
+		String jsonURL = "http://maps.google.com/maps/api/directions/json?";
+		final StringBuffer sBuf = new StringBuffer(jsonURL);
+		sBuf.append("origin=");
+		sBuf.append(from.getLatitudeE6()/1E6);
+		sBuf.append(',');
+		sBuf.append(from.getLongitudeE6()/1E6);
+		sBuf.append("&destination=");
+		sBuf.append(to.getLatitudeE6()/1E6);
+		sBuf.append(',');
+		sBuf.append(to.getLongitudeE6()/1E6);
+		sBuf.append("&sensor=true&mode=driving");
+		
+		return sBuf.toString();
 	}
 
 	/**
@@ -74,11 +102,19 @@ public class GoogleDirectionParser extends XMLParser implements DirectionParser 
 			for (int i = 0; i < numSteps; i++) {
 				//Get the individual step
 				final JSONObject step = steps.getJSONObject(i);
+				
 				//Get the start position for this step and set it on the segment
 				final JSONObject start = step.getJSONObject("start_location");
-				final GeoPoint position = new GeoPoint((int) (start.getDouble("lat")*1E6), 
+				GeoPoint position = new GeoPoint((int) (start.getDouble("lat")*1E6), 
 						(int) (start.getDouble("lng")*1E6));
-				segment.setPoint(position);
+				segment.setStartPoint(position);
+				
+				// Get the end position for this step and set it on the segment
+				final JSONObject end = step.getJSONObject("end_location");
+				position = new GeoPoint((int) (end.getDouble("lat")*1E6), 
+						(int) (end.getDouble("lng")*1E6));
+				segment.setEndPoint(position);
+				
 				//Set the length of this segment in metres
 				final int length = step.getJSONObject("distance").getInt("value");
 				distance += length;

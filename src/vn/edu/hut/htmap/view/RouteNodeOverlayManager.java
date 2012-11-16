@@ -65,7 +65,7 @@ public class RouteNodeOverlayManager {
 			List<Segment> segments = this.route.getSegments();		
 			for (int i=1; i<segments.size(); i++)
 			{
-				routeNodeItem.add(new ManagedOverlayItem(segments.get(i).startPoint(), "node" + i, null));
+				routeNodeItem.add(new ManagedOverlayItem(segments.get(i).getStartPoint(), "node" + i, null));
 			}
 			
 			// Draw the to point
@@ -78,9 +78,11 @@ public class RouteNodeOverlayManager {
 	public void setSelectedNode(int index)
 	{
 		this.routeNodeOverlay.getItem(this.selectedNode).setMarker(this.nodeMarker);
+		this.routeNodeOverlay.getItem(this.selectedNode+1).setMarker(this.nodeMarker);
 		
 		this.selectedNode = index;
 		
 		this.routeNodeOverlay.getItem(this.selectedNode).setMarker(this.selectedMarker);
+		this.routeNodeOverlay.getItem(this.selectedNode+1).setMarker(this.selectedMarker);
 	}
 }

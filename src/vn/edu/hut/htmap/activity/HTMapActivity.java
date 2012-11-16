@@ -305,34 +305,20 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 
 	/**
 	 * Calls Google Maps API to get the route 
-	 * @param start Start point
-	 * @param dest Destination
+	 * @param from Start point
+	 * @param to Destination
 	 * @return A route from start to destination
 	 */
-	private Route directions(final GeoPoint start, final GeoPoint dest) {
+	private Route directions(final GeoPoint from, final GeoPoint to) {
 		DirectionParser parser;
-		String jsonURL = "http://maps.google.com/maps/api/directions/json?";
-		final StringBuffer sBuf = new StringBuffer(jsonURL);
-		sBuf.append("origin=");
-		sBuf.append(start.getLatitudeE6()/1E6);
-		sBuf.append(',');
-		sBuf.append(start.getLongitudeE6()/1E6);
-		sBuf.append("&destination=");
-		sBuf.append(dest.getLatitudeE6()/1E6);
-		sBuf.append(',');
-		sBuf.append(dest.getLongitudeE6()/1E6);
-		sBuf.append("&sensor=true&mode=driving");
-
-		System.out.println("Route URL: " + sBuf.toString());
-
-		parser = new GoogleDirectionParser(sBuf.toString());
+		parser = new GoogleDirectionParser(from, to);
 		Route r =  parser.parse();
 		return r;
 	}
 
 	// Instruction view delegate methods
 	public void onChangedIndex(int index) {
-		this.mapView.getController().animateTo(this.route.getSegments().get(index).startPoint());
+		this.mapView.getController().animateTo(this.route.getSegments().get(index).getStartPoint());
 		this.mapView.getController().setZoom(17);
 		
 		this.routeNodeOverlayManager.setSelectedNode(index);
