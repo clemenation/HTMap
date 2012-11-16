@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,6 +48,21 @@ public class HTLocationDetailActivity extends Activity {
 		// Get the location from intent extra
 		int[] locationCoordinate = this.getIntent().getIntArrayExtra(HTMapActivity.LOCATION_COORDINATE_EXTRA);
 		this.setLocation(new GeoPoint(locationCoordinate[0], locationCoordinate[1]));
+		
+		// Enable the up button in action bar
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{		
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.onBackPressed();
+			return true;		
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	public void setLocation(GeoPoint location)
@@ -67,6 +83,7 @@ public class HTLocationDetailActivity extends Activity {
 		this.weatherDetailText.setText("");
 		this.lowHighTemperatureText.setText("--" + DEGREE_SYMBOL + " --" + DEGREE_SYMBOL);
 		this.weatherIcon.setImageDrawable(null);
+		this.setTitle("Location Detail");
 	}
 
 	private class GetWeather extends AsyncTask<Void, Void, Void>
@@ -95,6 +112,7 @@ public class HTLocationDetailActivity extends Activity {
 				outer.weatherDetailText.setText(this.weather.getWeatherCondition() + "\n"
 						+ "Humidity = " + this.weather.getRelativeHumidity() + "\n"
 						+ "Wind: " + this.weather.getWindKPH() + "kph");
+				outer.setTitle(this.weather.getLocationName());
 				UrlImageViewHelper.setUrlDrawable(outer.weatherIcon, this.weather.getIconURLString());
 			}
 			else
