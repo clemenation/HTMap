@@ -309,7 +309,7 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 	 * @param to Destination
 	 * @return A route from start to destination
 	 */
-	private Route directions(final GeoPoint from, final GeoPoint to) {
+	public static Route directions(final GeoPoint from, final GeoPoint to) {
 		DirectionParser parser;
 		parser = new GoogleDirectionParser(from, to);
 		Route r =  parser.parse();

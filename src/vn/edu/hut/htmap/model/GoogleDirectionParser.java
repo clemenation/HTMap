@@ -1,9 +1,5 @@
 package vn.edu.hut.htmap.model;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +18,7 @@ public class GoogleDirectionParser extends XMLParser implements DirectionParser 
 	
 	public GoogleDirectionParser(GeoPoint from, GeoPoint to)
 	{
-		this(GoogleDirectionParser.feedUrlFromPoints(from, to));
-	}
-
-	public GoogleDirectionParser(String feedUrl) {
-		super(feedUrl);
+		super(GoogleDirectionParser.feedUrlFromPoints(from, to));
 	}
 	
 	/**
@@ -132,33 +124,6 @@ public class GoogleDirectionParser extends XMLParser implements DirectionParser 
 			Log.e(e.getMessage(), "Google JSON Parser - " + feedUrl);
 		}
 		return route;
-	}
-
-	/**
-	 * Convert an inputstream to a string.
-	 * @param input inputstream to convert.
-	 * @return a String of the inputstream.
-	 */
-
-	private static String convertStreamToString(final InputStream input) {
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-		final StringBuilder sBuf = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sBuf.append(line);
-			}
-		} catch (IOException e) {
-			Log.e(e.getMessage(), "Google parser, stream2string");
-		} finally {
-			try {
-				input.close();
-			} catch (IOException e) {
-				Log.e(e.getMessage(), "Google parser, stream2string");
-			}
-		}
-		return sBuf.toString();
 	}
 
 	/**

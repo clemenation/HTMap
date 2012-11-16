@@ -1,7 +1,11 @@
 package vn.edu.hut.htmap.view;
 
 import vn.edu.hut.htmap.R;
+import vn.edu.hut.htmap.model.Address;
+import vn.edu.hut.htmap.model.AddressParser;
+import vn.edu.hut.htmap.model.GoogleAddressParser;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,9 +34,9 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 
 		this.directionButton = (Button)this.findViewById(R.id.pin_annotation_view_direction_button);
 		this.directionButton.setOnClickListener(this);
-		
+
 		this.detailText = (TextView)this.findViewById(R.id.pin_annotation_view_detail_text);
-			
+
 		this.detailLayout = (LinearLayout)this.findViewById(R.id.pin_annotation_view_detail_layout);
 		this.detailLayout.setOnClickListener(this);
 	}
@@ -45,19 +49,56 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 	public void setPoint(GeoPoint point)
 	{
 		this.point = point;
-		
+
 		// move the annotationView to the newly set point 
 		((MapView.LayoutParams)this.getLayoutParams()).point = this.point; 
-		
+
 		// TODO get detail of point and display in
 		// its detailText
+		this.getDetail();
 	}
-	
+
 	public GeoPoint getPoint()
 	{
 		return this.point;
 	}
-	
+
+	public void getDetail()
+	{
+		// Empty the detail text as its getting new address
+		this.detailText.setText("");
+		new GetAddress().execute(null, null);
+	}
+
+	private class GetAddress extends AsyncTask<Void, Void, Void>
+	{
+		PinAnnotationView outer = PinAnnotationView.this;
+		AddressParser parser;
+		Address address;
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			parser = new GoogleAddressParser(outer.point);
+			address =  parser.parse();
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// check if point changed during getting address
+			if (outer.point == parser.getRequestLocation())
+			{
+				outer.detailText.setText(address.getFormattedAddress());
+			}
+			else
+			{
+				Log.e("PinAnnotationView", "Location changed");
+			}
+		}
+
+	}
+
 	public void onClick(View v) {
 
 		if (v == this.directionButton)
@@ -71,7 +112,7 @@ public class PinAnnotationView extends LinearLayout implements OnClickListener {
 				Log.e("PinAnnotationView", "No delegate");
 			}
 		}
-		
+
 		if (v == this.detailLayout)
 		{
 			try
