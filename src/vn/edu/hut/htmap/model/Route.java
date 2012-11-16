@@ -16,6 +16,8 @@ public class Route {
     private String polyline;
     private GeoPoint fromPoint;
     private GeoPoint toPoint;
+    private GeoPoint boundsNE;
+    private GeoPoint boundsSW;
 
     public Route() {
             points = new ArrayList<GeoPoint>();
@@ -143,5 +145,24 @@ public class Route {
     public String getPolyline() {
             return polyline;
     }
+    
+    public GeoPoint getBoundsNE()
+    {
+    	return this.boundsNE;
+    }
+    
+    public void setBoundsNE(GeoPoint boundsNE)
+    {
+    	this.boundsNE = boundsNE;
+    }
+    
+    public GeoPoint getBoundsSW()
+    {
+    	return this.boundsSW;
+    }
 
+    public void setBoundsSW(GeoPoint boundsSW)
+    {
+    	this.boundsSW = boundsSW;
+    }
 }

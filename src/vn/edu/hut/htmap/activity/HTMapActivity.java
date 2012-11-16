@@ -277,11 +277,11 @@ public class HTMapActivity extends MapActivity implements RouteInstructionViewDa
 			this.instructionView.setCurrentIndex(0);
 
 			// Zoom to route
-			GeoPoint from = this.route.getFromPoint();
-			GeoPoint to = this.route.getToPoint();
-			this.mapView.getController().zoomToSpan(Math.abs(from.getLatitudeE6() - to.getLatitudeE6()), 
-					Math.abs(from.getLongitudeE6() - to.getLongitudeE6()));
-			this.mapView.getController().animateTo(this.midPoint(from, to));
+			GeoPoint boundsNE = this.route.getBoundsNE();
+			GeoPoint boundsSW = this.route.getBoundsSW();
+			this.mapView.getController().zoomToSpan(Math.abs(boundsNE.getLatitudeE6() - boundsSW.getLatitudeE6()), 
+					Math.abs(boundsNE.getLongitudeE6() - boundsSW.getLongitudeE6()));
+			this.mapView.getController().animateTo(this.midPoint(boundsNE, boundsSW));
 
 			// Enable up button
 			this.getActionBar().setDisplayHomeAsUpEnabled(true);
